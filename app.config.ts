@@ -32,7 +32,7 @@ const env = {
   appSlug: "deep-work-aura-v3-mobile",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "",
+  logoUrl: "https://d2xsxph8kpxj0f.cloudfront.net/310519663554141467/AMuRDMCiJ7ek9cUYWz82LF/icon-3LnMVmMrsthgdF687gyESK.webp",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
