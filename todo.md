@@ -108,4 +108,5 @@
 - [x] Update API calls to include language parameter
 - [x] Add language preference persistence
 - [x] Display language indicator in chat messages
-- [ ] Support code-switching in responses
+- [x] Integrate Google Gemini API for real responses
+- [x] Support multilingual responses (English, Hindi, Hinglish)
