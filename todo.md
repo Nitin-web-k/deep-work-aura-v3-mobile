@@ -100,3 +100,12 @@
 - [ ] Implement goal completion notifications
 - [ ] Add goal history and achievement tracking
 - [x] Create goals summary card for dashboard
+
+### Multilingual AI Tutor
+- [x] Update AI Tutor context with language preference
+- [x] Add language selector to AI Tutor screen (English, Hindi, Hinglish)
+- [x] Implement language auto-detection for questions
+- [x] Update API calls to include language parameter
+- [x] Add language preference persistence
+- [x] Display language indicator in chat messages
+- [ ] Support code-switching in responses

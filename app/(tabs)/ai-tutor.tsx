@@ -1,11 +1,19 @@
 import { ScrollView, Text, View, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import { ScreenContainer } from '@/components/screen-container';
-import { useAiTutor } from '@/lib/ai-tutor-context';
+import { useAiTutor, type Language } from '@/lib/ai-tutor-context';
 import { useEffect, useState } from 'react';
 
+const LANGUAGES: { label: string; value: Language }[] = [
+  { label: '🇬🇧 English', value: 'english' },
+  { label: '🇮🇳 हिंदी', value: 'hindi' },
+  { label: '🇮🇳 Hinglish', value: 'hinglish' },
+];
+
 export default function AiTutorScreen() {
-  const { messages, isLoading, askQuestion, loadHistory, clearHistory } = useAiTutor();
+  const { messages, isLoading, preferredLanguage, setPreferredLanguage, askQuestion, loadHistory, clearHistory } =
+    useAiTutor();
   const [question, setQuestion] = useState('');
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   useEffect(() => {
     loadHistory();
@@ -18,12 +26,69 @@ export default function AiTutorScreen() {
     }
   };
 
+  const getLanguageLabel = (lang: Language) => {
+    return LANGUAGES.find((l) => l.value === lang)?.label || 'English';
+  };
+
   return (
     <ScreenContainer className="p-4 gap-4">
-      {/* Header */}
-      <View className="gap-2 mb-2">
-        <Text className="text-3xl font-bold text-foreground">AI Tutor</Text>
-        <Text className="text-sm text-muted">Ask any question and get instant answers</Text>
+      {/* Header with Language Selector */}
+      <View className="flex-row items-center justify-between mb-2">
+        <View className="gap-1 flex-1">
+          <Text className="text-3xl font-bold text-foreground">AI Tutor</Text>
+          <Text className="text-sm text-muted">Ask any question and get instant answers</Text>
+        </View>
+
+        {/* Language Selector */}
+        <View className="relative">
+          <Pressable
+            onPress={() => setShowLanguageMenu(!showLanguageMenu)}
+            style={({ pressed }) => [
+              {
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                borderRadius: 8,
+                backgroundColor: '#1a1a1a',
+                borderWidth: 1,
+                borderColor: '#ADBB32',
+                opacity: pressed ? 0.8 : 1,
+              },
+            ]}
+          >
+            <Text className="text-sm font-semibold text-primary">{getLanguageLabel(preferredLanguage)}</Text>
+          </Pressable>
+
+          {/* Language Menu */}
+          {showLanguageMenu && (
+            <View className="absolute top-12 right-0 bg-surface rounded-lg shadow-lg z-10 min-w-max border border-border">
+              {LANGUAGES.map((lang) => (
+                <Pressable
+                  key={lang.value}
+                  onPress={() => {
+                    setPreferredLanguage(lang.value);
+                    setShowLanguageMenu(false);
+                  }}
+                  style={({ pressed }) => [
+                    {
+                      paddingHorizontal: 16,
+                      paddingVertical: 12,
+                      backgroundColor: preferredLanguage === lang.value ? '#ADBB32' : 'transparent',
+                      opacity: pressed ? 0.8 : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    className={`text-sm font-semibold ${
+                      preferredLanguage === lang.value ? 'text-background' : 'text-foreground'
+                    }`}
+                  >
+                    {lang.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
+        </View>
       </View>
 
       {/* Messages */}
@@ -34,7 +99,11 @@ export default function AiTutorScreen() {
         {messages.length === 0 ? (
           <View className="items-center justify-center py-8">
             <Text className="text-center text-muted text-sm">
-              No messages yet. Ask your first question!
+              {preferredLanguage === 'hindi'
+                ? 'अभी तक कोई संदेश नहीं। अपना पहला सवाल पूछें!'
+                : preferredLanguage === 'hinglish'
+                  ? 'Abhi tak koi message nahi. Apna pehla sawal poochein!'
+                  : 'No messages yet. Ask your first question!'}
             </Text>
           </View>
         ) : (
@@ -54,13 +123,20 @@ export default function AiTutorScreen() {
               >
                 {msg.content}
               </Text>
-              <Text
-                className={`text-xs mt-1 ${
-                  msg.role === 'user' ? 'text-background opacity-70' : 'text-muted'
-                }`}
-              >
-                {new Date(msg.timestamp).toLocaleTimeString()}
-              </Text>
+              <View className="flex-row items-center gap-1 mt-1">
+                <Text
+                  className={`text-xs ${
+                    msg.role === 'user' ? 'text-background opacity-70' : 'text-muted'
+                  }`}
+                >
+                  {new Date(msg.timestamp).toLocaleTimeString()}
+                </Text>
+                {msg.language && (
+                  <Text className={`text-xs ${msg.role === 'user' ? 'text-background opacity-70' : 'text-muted'}`}>
+                    • {msg.language.toUpperCase()}
+                  </Text>
+                )}
+              </View>
             </View>
           ))
         )}
@@ -68,7 +144,13 @@ export default function AiTutorScreen() {
         {isLoading && (
           <View className="flex-row items-center gap-2 bg-background rounded-lg p-3 mr-8">
             <ActivityIndicator color="#ADBB32" size="small" />
-            <Text className="text-sm text-muted">AI is thinking...</Text>
+            <Text className="text-sm text-muted">
+              {preferredLanguage === 'hindi'
+                ? 'सोच रहा हूँ...'
+                : preferredLanguage === 'hinglish'
+                  ? 'Soch raha hoon...'
+                  : 'AI is thinking...'}
+            </Text>
           </View>
         )}
       </ScrollView>
@@ -76,7 +158,13 @@ export default function AiTutorScreen() {
       {/* Input Area */}
       <View className="gap-2 bg-surface rounded-xl p-3">
         <TextInput
-          placeholder="Ask me anything..."
+          placeholder={
+            preferredLanguage === 'hindi'
+              ? 'कुछ भी पूछें...'
+              : preferredLanguage === 'hinglish'
+                ? 'Kuch bhi poochein...'
+                : 'Ask me anything...'
+          }
           placeholderTextColor="#A0A0A0"
           value={question}
           onChangeText={setQuestion}
@@ -102,7 +190,9 @@ export default function AiTutorScreen() {
               },
             ]}
           >
-            <Text className="text-background font-semibold">Ask</Text>
+            <Text className="text-background font-semibold">
+              {preferredLanguage === 'hindi' ? 'पूछें' : preferredLanguage === 'hinglish' ? 'Poochein' : 'Ask'}
+            </Text>
           </Pressable>
 
           {messages.length > 0 && (
@@ -120,7 +210,9 @@ export default function AiTutorScreen() {
                 },
               ]}
             >
-              <Text className="text-error font-semibold text-sm">Clear</Text>
+              <Text className="text-error font-semibold text-sm">
+                {preferredLanguage === 'hindi' ? 'साफ़' : preferredLanguage === 'hinglish' ? 'Clear' : 'Clear'}
+              </Text>
             </Pressable>
           )}
         </View>
