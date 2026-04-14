@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, Pressable, TextInput, ActivityIndicator, FlatList } from 'react-native';
+import { ScrollView, Text, View, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import { ScreenContainer } from '@/components/screen-container';
 import { useAiTutor, type Language, SUBJECT_MODES } from '@/lib/ai-tutor-context';
 import { useEffect, useState } from 'react';
@@ -13,27 +13,108 @@ const LANGUAGES: { label: string; value: Language }[] = [
 export default function AiTutorScreen() {
   const {
     messages,
-    isLoading,
     preferredLanguage,
     currentSubject,
     setPreferredLanguage,
     setCurrentSubject,
-    askQuestion,
-    loadHistory,
+    addMessage,
     clearHistory,
+    loadHistory,
   } = useAiTutor();
+
   const [question, setQuestion] = useState('');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showSubjectMenu, setShowSubjectMenu] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
+
+  // Use tRPC mutation hook directly
+  const askMutation = trpc.ai.ask.useMutation();
 
   useEffect(() => {
     loadHistory();
   }, []);
 
   const handleAsk = async () => {
-    if (question.trim()) {
-      await askQuestion(question, trpc);
+    if (!question.trim()) return;
+
+    setLocalLoading(true);
+
+    try {
+      // Get subject-specific prompt
+      const currentSubjectData = SUBJECT_MODES.find((s) => s.id === currentSubject);
+      const subjectPrompts = {
+        general: {
+          english: 'You are a helpful general knowledge AI tutor. Answer questions clearly and concisely.',
+          hindi: 'आप एक सहायक सामान्य ज्ञान AI शिक्षक हैं। प्रश्नों का स्पष्ट और संक्षिप्त उत्तर दें। हिंदी में उत्तर दें।',
+          hinglish: 'Aap ek sahayak samanya gyan AI shikshak hain. Prashno ka spasht aur sankshapt uttar den. Hinglish mein uttar den.',
+        },
+        math: {
+          english: 'You are an expert Math Solver. Help students solve mathematical problems step-by-step. Show all work and explain each step clearly. Use formulas and mathematical notation when appropriate.',
+          hindi: 'आप एक विशेषज्ञ गणित समाधानकर्ता हैं। छात्रों को गणितीय समस्याओं को चरण-दर-चरण हल करने में मदद करें। सभी कार्य दिखाएं और प्रत्येक चरण को स्पष्ट रूप से समझाएं। हिंदी में उत्तर दें।',
+          hinglish: 'Aap ek visheshagya math samadhanakarta hain. Chhatro ko ganitiya samasyao ko charan-dar-charan hal karne mein madad karein. Sabhi kary dikhayein aur pratyek charan ko spasht roop se samjhayein. Hinglish mein uttar den.',
+        },
+        science: {
+          english: 'You are a Science Expert covering Physics, Chemistry, and Biology. Explain scientific concepts clearly with examples. Use diagrams or illustrations when helpful. Break down complex topics into understandable parts.',
+          hindi: 'आप विज्ञान विशेषज्ञ हैं जो भौतिकी, रसायन विज्ञान और जीव विज्ञान को कवर करते हैं। वैज्ञानिक अवधारणाओं को उदाहरणों के साथ स्पष्ट रूप से समझाएं। जटिल विषयों को समझने योग्य भागों में विभाजित करें। हिंदी में उत्तर दें।',
+          hinglish: 'Aap vigyan visheshagya hain jo bhautiki, rasayan vigyan aur jeev vigyan ko cover karte hain. Vaigyanic avdharnao ko udaharn ke saath spasht roop se samjhayein. Jatil vishyo ko samjhne yogy bhago mein vibhajit karein. Hinglish mein uttar den.',
+        },
+        history: {
+          english: 'You are a History Guide expert in historical events, dates, and contexts. Provide accurate historical information with proper context. Explain the significance of events and their impact on society.',
+          hindi: 'आप इतिहास गाइड विशेषज्ञ हैं जो ऐतिहासिक घटनाओं, तारीखों और संदर्भों में विशेषज्ञ हैं। उचित संदर्भ के साथ सटीक ऐतिहासिक जानकारी प्रदान करें। घटनाओं के महत्व और समाज पर उनके प्रभाव को समझाएं। हिंदी में उत्तर दें।',
+          hinglish: 'Aap itihas guide visheshagya hain jo aitihasik ghatnaon, tarikho aur sandarbho mein visheshagya hain. Uchit sandarbh ke saath satik aitihasik jankari prdan karein. Ghatnaon ke mahatva aur samaj par unke prabhaav ko samjhayein. Hinglish mein uttar den.',
+        },
+        english: {
+          english: 'You are an English Tutor expert in grammar, literature, writing, and language skills. Help with sentence structure, vocabulary, essay writing, and literary analysis. Provide clear explanations and examples.',
+          hindi: 'आप अंग्रेजी शिक्षक हैं जो व्याकरण, साहित्य, लेखन और भाषा कौशल में विशेषज्ञ हैं। वाक्य संरचना, शब्दावली, निबंध लेखन और साहित्यिक विश्लेषण में मदद करें। स्पष्ट व्याख्या और उदाहरण प्रदान करें। हिंदी में उत्तर दें।',
+          hinglish: 'Aap angrezi shikshak hain jo vyakaran, sahitya, lekhan aur bhasha kaushal mein visheshagya hain. Vakya sanrachna, shabdavali, nibandh lekhan aur sahityik vishleshan mein madad karein. Spasht vyakhya aur udaharn prdan karein. Hinglish mein uttar den.',
+        },
+      };
+
+      const subjectPrompt = subjectPrompts[currentSubject]?.[preferredLanguage] || subjectPrompts.general.english;
+
+      // Add user message
+      await addMessage({
+        role: 'user',
+        content: question,
+        language: preferredLanguage,
+        subject: currentSubject,
+      });
+
+      // Call tRPC mutation
+      const result = await askMutation.mutateAsync({
+        question,
+        language: preferredLanguage,
+        subject: currentSubject,
+        subjectPrompt,
+      });
+
+      // Add AI response
+      await addMessage({
+        role: 'assistant',
+        content: result.answer,
+        language: preferredLanguage,
+        subject: currentSubject,
+      });
+
       setQuestion('');
+    } catch (error) {
+      console.error('Error asking question:', error);
+
+      // Add error message
+      const errorMessages = {
+        english: 'Sorry, I encountered an error. Please try again.',
+        hindi: 'क्षमा करें, एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
+        hinglish: 'Sorry, ek error hua. Kripya dubara koshish karein.',
+      };
+
+      await addMessage({
+        role: 'assistant',
+        content: errorMessages[preferredLanguage],
+        language: preferredLanguage,
+        subject: currentSubject,
+      });
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -46,6 +127,7 @@ export default function AiTutorScreen() {
   };
 
   const currentSubjectData = getCurrentSubject();
+  const isLoading_actual = localLoading || askMutation.isPending;
 
   return (
     <ScreenContainer className="p-4 gap-4">
@@ -100,7 +182,7 @@ export default function AiTutorScreen() {
 
         {/* Subject Menu */}
         {showSubjectMenu && (
-          <View className="bg-surface rounded-lg shadow-lg border border-border overflow-hidden">
+          <View className="bg-surface rounded-lg shadow-lg border border-border overflow-hidden z-20">
             {SUBJECT_MODES.map((subject) => (
               <Pressable
                 key={subject.id}
@@ -140,7 +222,7 @@ export default function AiTutorScreen() {
 
         {/* Language Menu */}
         {showLanguageMenu && (
-          <View className="bg-surface rounded-lg shadow-lg z-10 min-w-max border border-border">
+          <View className="bg-surface rounded-lg shadow-lg z-20 min-w-max border border-border">
             {LANGUAGES.map((lang) => (
               <Pressable
                 key={lang.value}
@@ -229,7 +311,7 @@ export default function AiTutorScreen() {
           ))
         )}
 
-        {isLoading && (
+        {isLoading_actual && (
           <View className="flex-row items-center gap-2 bg-background rounded-lg p-3 mr-8">
             <ActivityIndicator color="#ADBB32" size="small" />
             <Text className="text-sm text-muted">
@@ -258,7 +340,7 @@ export default function AiTutorScreen() {
           onChangeText={setQuestion}
           multiline
           maxLength={500}
-          editable={!isLoading}
+          editable={!isLoading_actual}
           className="bg-background text-foreground rounded-lg p-3 text-sm"
           style={{ minHeight: 50, maxHeight: 100 }}
         />
@@ -266,7 +348,7 @@ export default function AiTutorScreen() {
         <View className="flex-row gap-2">
           <Pressable
             onPress={handleAsk}
-            disabled={isLoading || !question.trim()}
+            disabled={isLoading_actual || !question.trim()}
             style={({ pressed }) => [
               {
                 flex: 1,
@@ -274,7 +356,7 @@ export default function AiTutorScreen() {
                 paddingVertical: 12,
                 borderRadius: 8,
                 alignItems: 'center',
-                opacity: isLoading || !question.trim() ? 0.5 : pressed ? 0.8 : 1,
+                opacity: isLoading_actual || !question.trim() ? 0.5 : pressed ? 0.8 : 1,
               },
             ]}
           >
