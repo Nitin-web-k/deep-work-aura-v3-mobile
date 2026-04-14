@@ -29,7 +29,7 @@ export default function HomeScreen() {
         <Text className="text-lg font-black text-foreground mb-4">QUICK START</Text>
 
         <View className="gap-3">
-          <Pressable onPress={() => router.push('timer')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
+          <Pressable onPress={() => router.push('./timer')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
             <View className="bg-primary rounded-2xl p-4 flex-row items-center justify-between">
               <View>
                 <Text className="text-white font-black text-lg">⏲️ Start Timer</Text>
@@ -39,7 +39,7 @@ export default function HomeScreen() {
             </View>
           </Pressable>
 
-          <Pressable onPress={() => router.push('chat')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
+          <Pressable onPress={() => router.push('./chat')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
             <View className="bg-surface rounded-2xl p-4 flex-row items-center justify-between border border-primary/30">
               <View>
                 <Text className="text-foreground font-black text-lg">💬 AI Chat</Text>
@@ -49,7 +49,7 @@ export default function HomeScreen() {
             </View>
           </Pressable>
 
-          <Pressable onPress={() => router.push('youtube')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
+          <Pressable onPress={() => router.push('./youtube')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
             <View className="bg-surface rounded-2xl p-4 flex-row items-center justify-between border border-primary/30">
               <View>
                 <Text className="text-foreground font-black text-lg">▶️ YouTube</Text>
@@ -59,7 +59,7 @@ export default function HomeScreen() {
             </View>
           </Pressable>
 
-          <Pressable onPress={() => router.push('leaderboard')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
+          <Pressable onPress={() => router.push('./leaderboard')} style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
             <View className="bg-surface rounded-2xl p-4 flex-row items-center justify-between border border-primary/30">
               <View>
                 <Text className="text-foreground font-black text-lg">🏆 Leaderboard</Text>
