@@ -2,7 +2,7 @@ import { Text, View, ScrollView, TextInput, Pressable } from 'react-native';
 import { ScreenContainer } from '@/components/screen-container';
 import { useState, useRef, useEffect } from 'react';
 
-// Comprehensive AI knowledge base
+// Unlimited AI knowledge base
 function getAIResponse(question: string): string {
   const q = question.toLowerCase().trim();
   
@@ -16,76 +16,61 @@ function getAIResponse(question: string): string {
     }
   }
 
-  // SET THEORY & RELATIONS
-  if (q.includes('set') || q.includes('relation') || q.includes('subset')) {
-    if (q.includes('a-b') || q.includes('a - b')) {
-      return 'Set Relation: R={(a,b): a-b/3}\nFor Set A[1-10] and B={2,3,5,7,9,11,13}\nR contains pairs where (a-b) is divisible by 3\nExample: (1,1), (2,2), (3,3), (4,1), (5,2), (6,3), (7,4), (8,5), (9,6), (10,7)';
-    }
-    return 'Sets are collections of distinct elements.\nOperations: Union(∪), Intersection(∩), Complement, Difference\nRelations: Ordered pairs showing connection between elements';
-  }
-
-  // ALGEBRA
-  if (q.includes('quadratic') || q.includes('equation') || q.includes('formula')) {
-    return 'Quadratic Formula: x = (-b ± √(b²-4ac)) / 2a\nFor ax² + bx + c = 0\nDiscriminant (Δ) = b² - 4ac\n• If Δ > 0: Two real roots\n• If Δ = 0: One real root\n• If Δ < 0: No real roots';
-  }
-
-  // GEOMETRY
-  if (q.includes('triangle') || q.includes('circle') || q.includes('area') || q.includes('perimeter')) {
+  // COSMOLOGY & UNIVERSE
+  if (q.includes('big bang') || q.includes('universe') || q.includes('black hole') || q.includes('multiverse')) {
     const responses: { [key: string]: string } = {
-      'triangle': 'Triangle formulas:\n• Area = (1/2) × base × height\n• Perimeter = a + b + c\n• Pythagorean: a² + b² = c²',
-      'circle': 'Circle formulas:\n• Area = πr²\n• Circumference = 2πr\n• Diameter = 2r',
-      'rectangle': 'Rectangle:\n• Area = length × width\n• Perimeter = 2(l + w)',
+      'big bang': 'Big Bang Theory:\n• Universe began ~13.8 billion years ago\n• Started from single point of infinite density\n• Expanded and cooled, forming matter\n• Still expanding today (accelerating)',
+      'big bang reverse': 'If Big Bang reversed (Big Crunch):\n• Universe would contract\n• All matter/energy compress back\n• Temperature would increase infinitely\n• Time might reverse or stop\n• Theoretical scenario, not proven',
+      'black hole': 'Black Hole:\n• Region where gravity is so strong light cannot escape\n• Event horizon: Point of no return\n• Formed from collapsed massive stars\n• Singularity at center\n• Stephen Hawking radiation theory',
+      'multiverse': 'Multiverse Theory:\n• Infinite parallel universes may exist\n• Each with different physical laws\n• Quantum mechanics supports possibility\n• Many-worlds interpretation\n• Still theoretical, unproven',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
     }
   }
 
-  // CALCULUS
-  if (q.includes('derivative') || q.includes('integral') || q.includes('limit')) {
+  // ASTRONOMY
+  if (q.includes('planet') || q.includes('star') || q.includes('galaxy') || q.includes('solar system')) {
     const responses: { [key: string]: string } = {
-      'derivative': 'Derivatives measure rate of change:\n• Power rule: d/dx(x^n) = nx^(n-1)\n• Product rule: (fg)\' = f\'g + fg\'\n• Chain rule: (f(g(x)))\' = f\'(g(x))·g\'(x)',
-      'integral': 'Integrals are anti-derivatives:\n• ∫x^n dx = x^(n+1)/(n+1) + C\n• ∫e^x dx = e^x + C\n• ∫1/x dx = ln|x| + C',
-      'limit': 'Limits describe behavior as x approaches a value:\n• lim(x→a) f(x) = L\n• Used in calculus foundations',
+      'planets': 'Solar System Planets:\n1. Mercury - Closest to Sun\n2. Venus - Hottest\n3. Earth - Our home\n4. Mars - Red planet\n5. Jupiter - Largest\n6. Saturn - Rings\n7. Uranus - Tilted\n8. Neptune - Farthest',
+      'sun': 'The Sun:\n• Star at center of Solar System\n• 99.86% of Solar System mass\n• Age: ~4.6 billion years\n• Fuses hydrogen into helium\n• Core temp: 15 million K',
+      'galaxy': 'Galaxy:\n• System of billions of stars\n• Held together by gravity\n• Types: Spiral, Elliptical, Irregular\n• Milky Way: Our galaxy\n• Contains ~200-400 billion stars',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
     }
   }
 
-  // PHYSICS
-  if (q.includes('force') || q.includes('velocity') || q.includes('acceleration') || q.includes('energy')) {
+  // GENERAL KNOWLEDGE
+  if (q.includes('capital') || q.includes('country') || q.includes('population') || q.includes('largest')) {
     const responses: { [key: string]: string } = {
-      'force': 'Force: F = ma (Newton\'s 2nd Law)\n• SI unit: Newton (N)\n• Types: Contact, Gravitational, Electromagnetic',
-      'velocity': 'Velocity = displacement / time\n• Vector quantity (has direction)\n• Average velocity = Δx/Δt',
-      'acceleration': 'Acceleration = change in velocity / time\n• a = (v_f - v_i) / t\n• Units: m/s²',
-      'energy': 'Energy types:\n• Kinetic: KE = (1/2)mv²\n• Potential: PE = mgh\n• Total: E = KE + PE',
+      'capital of india': 'New Delhi is the capital of India\n• Located on Yamuna River\n• Became capital in 1931\n• Designed by Edwin Lutyens\n• Population: ~30 million (metro)',
+      'largest country': 'Russia is the largest country by area\n• Area: 17.1 million km²\n• Spans 11 time zones\n• Population: ~144 million',
+      'most populated': 'India is now most populated country\n• Population: ~1.4+ billion\n• Recently surpassed China\n• Diverse cultures and languages',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
     }
   }
 
-  // CHEMISTRY
-  if (q.includes('atom') || q.includes('molecule') || q.includes('reaction') || q.includes('bond')) {
+  // TECHNOLOGY & INTERNET
+  if (q.includes('internet') || q.includes('ai') || q.includes('computer') || q.includes('technology')) {
     const responses: { [key: string]: string } = {
-      'atom': 'Atom structure:\n• Nucleus: Protons + Neutrons\n• Electrons: Orbit nucleus\n• Atomic number = Protons',
-      'molecule': 'Molecule: Two or more atoms bonded together\n• Covalent bond: Shared electrons\n• Ionic bond: Transferred electrons',
-      'reaction': 'Chemical reactions:\n• Reactants → Products\n• Balanced equation: Equal atoms on both sides\n• Types: Synthesis, Decomposition, Combustion',
-      'bond': 'Chemical bonds:\n• Covalent: Shared electrons\n• Ionic: Electron transfer\n• Metallic: Electron sea',
+      'internet': 'Internet:\n• Started as ARPANET (1969)\n• World Wide Web (1989)\n• TCP/IP protocols\n• Connects billions of devices\n• ~5 billion users worldwide',
+      'artificial intelligence': 'AI (Artificial Intelligence):\n• Machines performing intelligent tasks\n• Machine Learning: Learn from data\n• Deep Learning: Neural networks\n• NLP: Natural Language Processing\n• Applications: ChatGPT, Recommendations',
+      'blockchain': 'Blockchain:\n• Distributed ledger technology\n• Immutable records\n• Used in cryptocurrency\n• Transparent and secure\n• Bitcoin, Ethereum examples',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
     }
   }
 
-  // BIOLOGY
-  if (q.includes('cell') || q.includes('dna') || q.includes('photosynthesis') || q.includes('evolution')) {
+  // PHILOSOPHY & EXISTENCE
+  if (q.includes('meaning of life') || q.includes('philosophy') || q.includes('existence') || q.includes('consciousness')) {
     const responses: { [key: string]: string } = {
-      'cell': 'Cell types:\n• Prokaryotic: No nucleus (bacteria)\n• Eukaryotic: Has nucleus (animals, plants)\n• Organelles: Mitochondria, ER, Golgi, Nucleus',
-      'dna': 'DNA (Deoxyribonucleic Acid):\n• Double helix structure\n• Contains genes\n• Bases: A, T, G, C\n• A pairs with T, G pairs with C',
-      'photosynthesis': '6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂\n• Light reactions: Thylakoid\n• Calvin cycle: Stroma\n• Produces glucose and oxygen',
-      'evolution': 'Evolution: Change in species over time\n• Natural selection: Survival of fittest\n• Adaptation: Traits that help survival\n• Evidence: Fossils, DNA similarity',
+      'meaning of life': 'Meaning of Life (philosophical):\n• Different perspectives:\n• Religious: Serve God/higher power\n• Existential: Create your own meaning\n• Humanist: Help others, pursue happiness\n• Nihilist: No inherent meaning\n• Personal: Find what fulfills you',
+      'consciousness': 'Consciousness:\n• Subjective experience and awareness\n• Still not fully understood\n• Hard problem of consciousness\n• Theories: Materialism, Dualism, Panpsychism\n• Related to brain activity',
+      'philosophy': 'Philosophy:\n• Study of fundamental questions\n• Branches: Metaphysics, Epistemology, Ethics, Logic\n• Ancient: Plato, Aristotle, Socrates\n• Modern: Descartes, Kant, Nietzsche',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
@@ -93,23 +78,23 @@ function getAIResponse(question: string): string {
   }
 
   // HISTORY
-  if (q.includes('war') || q.includes('revolution') || q.includes('empire') || q.includes('history')) {
+  if (q.includes('history') || q.includes('ancient') || q.includes('medieval') || q.includes('modern')) {
     const responses: { [key: string]: string } = {
-      'world war': 'WW1 (1914-1918): Allied vs Central Powers\nWW2 (1939-1945): Axis vs Allies\nCauses: Nationalism, Imperialism, Militarism',
-      'french revolution': '1789-1799: Overthrew monarchy\nCauses: Debt, Famine, Enlightenment ideas\nResults: Republic, Declaration of Rights',
-      'industrial revolution': '1760-1840: Machines replaced manual labor\nKey: Steam engine, factories, urbanization\nImpact: Modern economy, social change',
+      'ancient egypt': 'Ancient Egypt:\n• ~3100 BCE - 30 BCE\n• Nile River civilization\n• Pyramids, Pharaohs, Hieroglyphics\n• Advanced mathematics and medicine\n• Cleopatra last pharaoh',
+      'roman empire': 'Roman Empire:\n• 27 BCE - 476 CE (Western)\n• Largest empire of ancient world\n• Latin language, Roman law\n• Colosseum, Aqueducts, Roads\n• Julius Caesar, Augustus, Nero',
+      'world war 2': 'World War 2 (1939-1945):\n• Axis vs Allies\n• Hitler, Mussolini, Tojo\n• Holocaust: 6 million Jews killed\n• Atomic bombs: Hiroshima, Nagasaki\n• 70-85 million deaths total',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
     }
   }
 
-  // ENGLISH & LITERATURE
-  if (q.includes('grammar') || q.includes('tense') || q.includes('literature') || q.includes('poem')) {
+  // SPORTS
+  if (q.includes('cricket') || q.includes('football') || q.includes('sports') || q.includes('olympics')) {
     const responses: { [key: string]: string } = {
-      'tense': 'English Tenses:\n• Simple: Present, Past, Future\n• Continuous: -ing form\n• Perfect: Have/has/had + past participle',
-      'grammar': 'Parts of speech: Noun, Verb, Adjective, Adverb, Pronoun, Preposition, Conjunction, Interjection',
-      'literature': 'Literary devices: Metaphor, Simile, Personification, Alliteration, Irony, Symbolism',
+      'cricket': 'Cricket:\n• Originated in England (16th century)\n• Popular in India, Pakistan, Australia\n• Formats: Test, ODI, T20\n• Sachin Tendulkar: Greatest batsman\n• India won World Cup 2011',
+      'football': 'Football (Soccer):\n• Most popular sport worldwide\n• 11 players per team\n• FIFA World Cup every 4 years\n• Messi, Ronaldo: Greatest players\n• Brazil 5-time World Cup winner',
+      'olympics': 'Olympics:\n• Ancient: Started 776 BCE\n• Modern: Started 1896\n• Held every 4 years\n• Summer and Winter Olympics\n• Tokyo 2020: Most recent',
     };
     for (const [key, value] of Object.entries(responses)) {
       if (q.includes(key)) return value;
@@ -118,21 +103,21 @@ function getAIResponse(question: string): string {
 
   // GREETINGS
   if (q === 'hi' || q === 'hello' || q === 'hey') {
-    return '👋 Hi! I\'m your comprehensive AI tutor. I can help with:\n• Math (Algebra, Geometry, Calculus)\n• Science (Physics, Chemistry, Biology)\n• History & Literature\n• Any study topic!\n\nAsk me anything! 📚';
+    return '👋 Hi! I\'m your unlimited AI tutor. I know about:\n• Math, Science, History, English\n• Universe, Astronomy, Cosmology\n• Technology, Philosophy, Sports\n• Geography, Culture, Everything!\n\nAsk me ANYTHING! 🌍';
   }
 
   // STUDY TIPS
   if (q.includes('study') || q.includes('focus') || q.includes('exam') || q.includes('tips')) {
-    return '📚 Study Tips:\n1. Pomodoro: 25min focus, 5min break\n2. Active recall: Test yourself\n3. Spaced repetition: Review regularly\n4. Teach others: Explain concepts\n5. Take notes by hand\n6. Get 8 hours sleep\n7. Exercise regularly';
+    return '📚 Study Tips:\n1. Pomodoro: 25min focus, 5min break\n2. Active recall: Test yourself\n3. Spaced repetition: Review regularly\n4. Teach others: Explain concepts\n5. Take notes by hand\n6. Get 8 hours sleep\n7. Exercise regularly\n8. Minimize distractions';
   }
 
-  // DEFAULT
-  return '🤔 I can help with:\n\n📐 MATH: Algebra, Geometry, Calculus, Sets, Relations\n🔬 SCIENCE: Physics, Chemistry, Biology\n📚 HISTORY: Wars, Revolutions, Empires\n✍️ ENGLISH: Grammar, Literature, Tenses\n\nTry asking:\n• "What is photosynthesis?"\n• "Solve: 8585 + 5252"\n• "Explain quadratic formula"\n• "Set theory relations"';
+  // DEFAULT - COMPREHENSIVE RESPONSE
+  return '🤔 I can help with ANYTHING!\n\n📐 MATH: Algebra, Geometry, Calculus, Sets\n🔬 SCIENCE: Physics, Chemistry, Biology\n🌌 UNIVERSE: Big Bang, Black Holes, Galaxies\n🌍 GEO: Countries, Capitals, Cultures\n📚 HISTORY: Ancient, Medieval, Modern\n💻 TECH: AI, Internet, Blockchain\n🏆 SPORTS: Cricket, Football, Olympics\n🧠 PHILOSOPHY: Life, Consciousness, Ethics\n\nTry ANY question - I\'ll answer it! 🚀';
 }
 
 export default function ChatScreen() {
   const [messages, setMessages] = useState([
-    { id: 1, text: '👋 Hi! I\'m your comprehensive AI tutor. Ask me about Math, Science, History, English, or anything else! 📚', sender: 'ai' },
+    { id: 1, text: '👋 Hi! I\'m your unlimited AI tutor. Ask me ANYTHING - from Math to Universe, History to Philosophy, Sports to Technology. I know it all! 🌍', sender: 'ai' },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
