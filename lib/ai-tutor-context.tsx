@@ -16,7 +16,7 @@ export interface AiTutorContextType {
   isLoading: boolean;
   preferredLanguage: Language;
   setPreferredLanguage: (lang: Language) => Promise<void>;
-  askQuestion: (question: string) => Promise<void>;
+  askQuestion: (question: string, trpcClient?: any) => Promise<void>;
   clearHistory: () => Promise<void>;
   loadHistory: () => Promise<void>;
   detectLanguage: (text: string) => Language;
@@ -86,7 +86,16 @@ export function AiTutorProvider({ children }: { children: React.ReactNode }) {
     return detectLanguageFromText(text);
   };
 
-  const askQuestion = async (question: string) => {
+  const getErrorMessage = (lang: Language): string => {
+    const errorMessages = {
+      english: 'Sorry, I encountered an error while processing your question. Please try again.',
+      hindi: 'क्षमा करें, आपके प्रश्न को संसाधित करते समय मुझे एक त्रुटि का सामना करना पड़ा। कृपया पुनः प्रयास करें।',
+      hinglish: 'Sorry, aapke prashna ko process karte samay mujhe ek error ka samna karna pada. Kripya dubara koshish karein.',
+    };
+    return errorMessages[lang];
+  };
+
+  const askQuestion = async (question: string, trpcClient?: any) => {
     if (!question.trim()) return;
 
     // Detect language from question
@@ -109,31 +118,48 @@ export function AiTutorProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
 
     try {
-      // Call the backend AI service with language parameter
-      const response = await fetch('/api/ai/ask', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question,
-          conversationHistory: messages,
-          language: responseLanguage,
-          detectedLanguage: detectedLanguage,
-        }),
-      });
+      let answer = '';
 
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
+      // Try using tRPC client if available
+      if (trpcClient) {
+        try {
+          const result = await trpcClient.ai.ask.mutate({
+            question,
+            language: responseLanguage,
+            detectedLanguage: detectedLanguage,
+          });
+          answer = result.answer;
+        } catch (trpcError) {
+          console.error('tRPC error:', trpcError);
+          throw trpcError;
+        }
+      } else {
+        // Fallback to direct API call
+        const response = await fetch('/api/ai/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question,
+            language: responseLanguage,
+            detectedLanguage: detectedLanguage,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        answer = data.answer;
       }
-
-      const data = await response.json();
 
       // Add AI response
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: data.answer,
+        content: answer,
         timestamp: Date.now(),
         language: responseLanguage,
       };
@@ -161,24 +187,6 @@ export function AiTutorProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const getErrorMessage = (lang: Language): string => {
-    const messages = {
-      english: 'Sorry, I encountered an error while processing your question. Please try again.',
-      hindi: 'क्षमा करें, आपके प्रश्न को संसाधित करते समय मुझे एक त्रुटि का सामना करना पड़ा। कृपया पुनः प्रयास करें।',
-      hinglish: 'Sorry, aapke prashna ko process karte samay mujhe ek error ka samna karna pada. Kripya dubara koshish karein.',
-    };
-    return messages[lang];
-  };
-
-  const clearHistory = async () => {
-    setMessages([]);
-    try {
-      await AsyncStorage.removeItem('aiTutorMessages');
-    } catch (error) {
-      console.error('Error clearing AI tutor history:', error);
-    }
-  };
-
   return (
     <AiTutorContext.Provider
       value={{
@@ -187,7 +195,14 @@ export function AiTutorProvider({ children }: { children: React.ReactNode }) {
         preferredLanguage,
         setPreferredLanguage,
         askQuestion,
-        clearHistory,
+        clearHistory: async () => {
+          setMessages([]);
+          try {
+            await AsyncStorage.removeItem('aiTutorMessages');
+          } catch (error) {
+            console.error('Error clearing AI tutor history:', error);
+          }
+        },
         loadHistory,
         detectLanguage,
       }}

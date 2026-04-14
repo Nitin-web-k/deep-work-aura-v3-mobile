@@ -2,6 +2,7 @@ import { ScrollView, Text, View, Pressable, TextInput, ActivityIndicator } from 
 import { ScreenContainer } from '@/components/screen-container';
 import { useAiTutor, type Language } from '@/lib/ai-tutor-context';
 import { useEffect, useState } from 'react';
+import { trpc } from '@/lib/trpc';
 
 const LANGUAGES: { label: string; value: Language }[] = [
   { label: '🇬🇧 English', value: 'english' },
@@ -21,7 +22,7 @@ export default function AiTutorScreen() {
 
   const handleAsk = async () => {
     if (question.trim()) {
-      await askQuestion(question);
+      await askQuestion(question, trpc);
       setQuestion('');
     }
   };
