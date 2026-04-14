@@ -49,6 +49,27 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="chevron.left.forwardslash.chevron.right" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="ai-tutor"
+        options={{
+          title: "AI Tutor",
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="music"
+        options={{
+          title: "Music",
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="analytics"
+        options={{
+          title: "Analytics",
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chevron.right" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

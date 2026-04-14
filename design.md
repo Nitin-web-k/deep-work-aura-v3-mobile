@@ -8,12 +8,14 @@ Deep Work Aura V3 is a productivity and focus application designed to help users
 
 ## Screen List
 
-1. **Home Screen** - Main dashboard showing current session status and quick actions
+1. **Home Dashboard** - Main dashboard with focus stats, quick start, and AI tutor access
 2. **Timer Screen** - Pomodoro timer with work/break intervals and session controls
-3. **Settings Screen** - Customize timer durations, notifications, and preferences
-4. **History Screen** - View past sessions and focus statistics
-5. **Leaderboard Screen** - Competitive focus tracking (optional for future)
-6. **Profile Screen** - User information and account settings
+3. **AI Tutor Screen** - Ask questions and get instant answers from AI
+4. **Music Player Screen** - YouTube music integration for focus sessions
+5. **Settings Screen** - Customize timer, notifications, and preferences
+6. **Student Progress Dashboard** - Track study hours, days, and performance metrics
+7. **Analytics Screen** - Detailed progress charts and leaderboard
+8. **Profile Screen** - User information and account settings
 
 ---
 
@@ -87,23 +89,27 @@ Deep Work Aura V3 is a productivity and focus application designed to help users
 
 ---
 
-## Color Choices
+## Color Choices (RetailFlow-Inspired Dark Theme)
 
-| Element | Light Mode | Dark Mode | Purpose |
-|---------|-----------|-----------|---------|
-| **Primary** | `#0a7ea4` | `#0a7ea4` | Action buttons, focus indicators |
-| **Background** | `#ffffff` | `#151718` | Screen background |
-| **Surface** | `#f5f5f5` | `#1e2022` | Cards, elevated surfaces |
-| **Foreground** | `#11181C` | `#ECEDEE` | Primary text |
-| **Muted** | `#687076` | `#9BA1A6` | Secondary text |
-| **Success** | `#22C55E` | `#4ADE80` | Session completed, positive feedback |
-| **Warning** | `#F59E0B` | `#FBBF24` | Break reminders, alerts |
-| **Error** | `#EF4444` | `#F87171` | Session cancelled, errors |
+| Element | Color | Purpose |
+|---------|-------|----------|
+| **Background** | `#0f0f0f` | Main screen background (deep black) |
+| **Surface** | `#1a1a1a` | Cards and elevated surfaces |
+| **Primary Accent** | `#ADBB32` | Neon lime for active states, highlights |
+| **Secondary Accent** | `#78860E` | Darker lime for secondary highlights |
+| **Foreground** | `#FFFFFF` | Primary text (white) |
+| **Muted** | `#A0A0A0` | Secondary text (light gray) |
+| **Success** | `#22C55E` | Session completed, positive feedback |
+| **Warning** | `#F59E0B` | Break reminders, alerts |
+| **Error** | `#EF4444` | Session cancelled, errors |
+| **Glass Effect** | `rgba(255,255,255,0.1)` | Semi-transparent surfaces |
 
-### Brand Accent
-- **Primary Focus Color**: Deep teal (`#0a7ea4`) for focus-related actions
-- **Accent Gradient**: Teal to indigo for timer backgrounds
-- **Calming Secondary**: Soft gray for secondary UI elements
+### Design System
+- **Primary Accent**: Neon lime (`#ADBB32`) for focus-related actions and highlights
+- **Gradient Accents**: Smooth transitions using lime to darker tones
+- **Glass Morphism**: Semi-transparent overlays for modern feel
+- **Bold Numerics**: Large, clear numbers for timer and statistics
+- **Dark Mode Only**: Optimized for eye comfort during extended study sessions
 
 ---
 

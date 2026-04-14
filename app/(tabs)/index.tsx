@@ -100,13 +100,71 @@ export default function HomeScreen() {
             </View>
           </View>
 
+          {/* Feature Cards */}
+          <View className="gap-2">
+            <Text className="text-sm font-semibold text-foreground mb-2">Quick Access</Text>
+            <Pressable
+              onPress={() => router.push('./(tabs)/ai-tutor')}
+              style={({ pressed }) => [{
+                backgroundColor: '#1a1a1a',
+                borderRadius: 12,
+                padding: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                opacity: pressed ? 0.8 : 1,
+              }]}
+            >
+              <Text className="text-2xl mr-3">🤖</Text>
+              <View className="flex-1">
+                <Text className="text-sm font-semibold text-foreground">AI Tutor</Text>
+                <Text className="text-xs text-muted">Ask questions anytime</Text>
+              </View>
+            </Pressable>
+
+            <Pressable
+              onPress={() => router.push('./(tabs)/music')}
+              style={({ pressed }) => [{
+                backgroundColor: '#1a1a1a',
+                borderRadius: 12,
+                padding: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                opacity: pressed ? 0.8 : 1,
+              }]}
+            >
+              <Text className="text-2xl mr-3">🎵</Text>
+              <View className="flex-1">
+                <Text className="text-sm font-semibold text-foreground">Music</Text>
+                <Text className="text-xs text-muted">Focus with YouTube songs</Text>
+              </View>
+            </Pressable>
+
+            <Pressable
+              onPress={() => router.push('./(tabs)/analytics')}
+              style={({ pressed }) => [{
+                backgroundColor: '#1a1a1a',
+                borderRadius: 12,
+                padding: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                opacity: pressed ? 0.8 : 1,
+              }]}
+            >
+              <Text className="text-2xl mr-3">📊</Text>
+              <View className="flex-1">
+                <Text className="text-sm font-semibold text-foreground">Analytics</Text>
+                <Text className="text-xs text-muted">Track your progress</Text>
+              </View>
+            </Pressable>
+          </View>
+
           {/* CTA */}
           <Pressable
             onPress={() => router.push('./(tabs)/settings')}
             style={({ pressed }) => [
               {
                 borderWidth: 2,
-                borderColor: '#0a7ea4',
+                borderColor: '#ADBB32',
                 borderRadius: 12,
                 paddingVertical: 14,
                 alignItems: 'center',
