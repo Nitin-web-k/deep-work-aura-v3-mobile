@@ -90,3 +90,13 @@
 - [ ] Add smooth gradients and transitions
 - [x] Implement bold numeric displays
 - [x] Update card-based layouts
+
+### Study Goals Feature
+- [x] Create goals context for managing study goals
+- [x] Build goal creation screen with duration and frequency options
+- [x] Implement goal tracking logic (daily/weekly/monthly)
+- [x] Create goal management screen (edit/delete goals)
+- [x] Add goal progress visualization in analytics
+- [ ] Implement goal completion notifications
+- [ ] Add goal history and achievement tracking
+- [x] Create goals summary card for dashboard

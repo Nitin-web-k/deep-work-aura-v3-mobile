@@ -156,6 +156,24 @@ export default function HomeScreen() {
                 <Text className="text-xs text-muted">Track your progress</Text>
               </View>
             </Pressable>
+
+            <Pressable
+              onPress={() => router.push('./(tabs)/goals')}
+              style={({ pressed }) => [{
+                backgroundColor: '#1a1a1a',
+                borderRadius: 12,
+                padding: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                opacity: pressed ? 0.8 : 1,
+              }]}
+            >
+              <Text className="text-2xl mr-3">🎯</Text>
+              <View className="flex-1">
+                <Text className="text-sm font-semibold text-foreground">Goals</Text>
+                <Text className="text-xs text-muted">Set study targets</Text>
+              </View>
+            </Pressable>
           </View>
 
           {/* CTA */}
