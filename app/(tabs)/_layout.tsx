@@ -35,69 +35,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="chat"
-        options={{
-          title: "Chat",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="timer"
-        options={{
-          title: "Timer",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chevron.right" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chevron.left.forwardslash.chevron.right" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="ai-tutor"
-        options={{
-          title: "AI Tutor",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="music"
-        options={{
-          title: "Music",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="analytics"
-        options={{
-          title: "Analytics",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chevron.right" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="goals"
-        options={{
-          title: "Goals",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="leaderboard"
-        options={{
-          title: "Leaderboard",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="youtube"
-        options={{
-          title: "YouTube",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
     </Tabs>
   );
 }
