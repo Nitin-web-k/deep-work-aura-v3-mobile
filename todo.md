@@ -110,3 +110,12 @@
 - [x] Display language indicator in chat messages
 - [x] Integrate Google Gemini API for real responses
 - [x] Support multilingual responses (English, Hindi, Hinglish)
+
+### Subject-Specific AI Tutor Modes
+- [x] Update AI Tutor context with subject mode state
+- [x] Add subject mode selector UI to AI Tutor screen
+- [x] Create subject-specific system prompts (Math, Science, History, English, General)
+- [x] Update backend router to use subject-specific prompts
+- [x] Add subject mode persistence to AsyncStorage
+- [x] Display current subject mode in AI Tutor header
+- [x] Add subject icons and colors for visual distinction

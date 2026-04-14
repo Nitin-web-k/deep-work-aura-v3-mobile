@@ -1,6 +1,6 @@
-import { ScrollView, Text, View, Pressable, TextInput, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, View, Pressable, TextInput, ActivityIndicator, FlatList } from 'react-native';
 import { ScreenContainer } from '@/components/screen-container';
-import { useAiTutor, type Language } from '@/lib/ai-tutor-context';
+import { useAiTutor, type Language, SUBJECT_MODES } from '@/lib/ai-tutor-context';
 import { useEffect, useState } from 'react';
 import { trpc } from '@/lib/trpc';
 
@@ -11,10 +11,20 @@ const LANGUAGES: { label: string; value: Language }[] = [
 ];
 
 export default function AiTutorScreen() {
-  const { messages, isLoading, preferredLanguage, setPreferredLanguage, askQuestion, loadHistory, clearHistory } =
-    useAiTutor();
+  const {
+    messages,
+    isLoading,
+    preferredLanguage,
+    currentSubject,
+    setPreferredLanguage,
+    setCurrentSubject,
+    askQuestion,
+    loadHistory,
+    clearHistory,
+  } = useAiTutor();
   const [question, setQuestion] = useState('');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showSubjectMenu, setShowSubjectMenu] = useState(false);
 
   useEffect(() => {
     loadHistory();
@@ -31,23 +41,51 @@ export default function AiTutorScreen() {
     return LANGUAGES.find((l) => l.value === lang)?.label || 'English';
   };
 
+  const getCurrentSubject = () => {
+    return SUBJECT_MODES.find((s) => s.id === currentSubject);
+  };
+
+  const currentSubjectData = getCurrentSubject();
+
   return (
     <ScreenContainer className="p-4 gap-4">
-      {/* Header with Language Selector */}
-      <View className="flex-row items-center justify-between mb-2">
-        <View className="gap-1 flex-1">
-          <Text className="text-3xl font-bold text-foreground">AI Tutor</Text>
-          <Text className="text-sm text-muted">Ask any question and get instant answers</Text>
+      {/* Header with Language & Subject Selectors */}
+      <View className="gap-2">
+        <View className="flex-row items-center justify-between mb-2">
+          <View className="gap-1 flex-1">
+            <Text className="text-3xl font-bold text-foreground">AI Tutor</Text>
+            <Text className="text-sm text-muted">Ask questions and get expert answers</Text>
+          </View>
         </View>
 
-        {/* Language Selector */}
-        <View className="relative">
+        {/* Subject & Language Selector Row */}
+        <View className="flex-row gap-2">
+          {/* Subject Selector */}
+          <Pressable
+            onPress={() => setShowSubjectMenu(!showSubjectMenu)}
+            style={({ pressed }) => [
+              {
+                flex: 1,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                borderRadius: 8,
+                backgroundColor: currentSubjectData?.color || '#ADBB32',
+                opacity: pressed ? 0.8 : 1,
+              },
+            ]}
+          >
+            <Text className="text-sm font-bold text-background text-center">
+              {currentSubjectData?.icon} {currentSubjectData?.name}
+            </Text>
+          </Pressable>
+
+          {/* Language Selector */}
           <Pressable
             onPress={() => setShowLanguageMenu(!showLanguageMenu)}
             style={({ pressed }) => [
               {
                 paddingHorizontal: 12,
-                paddingVertical: 8,
+                paddingVertical: 10,
                 borderRadius: 8,
                 backgroundColor: '#1a1a1a',
                 borderWidth: 1,
@@ -58,38 +96,78 @@ export default function AiTutorScreen() {
           >
             <Text className="text-sm font-semibold text-primary">{getLanguageLabel(preferredLanguage)}</Text>
           </Pressable>
-
-          {/* Language Menu */}
-          {showLanguageMenu && (
-            <View className="absolute top-12 right-0 bg-surface rounded-lg shadow-lg z-10 min-w-max border border-border">
-              {LANGUAGES.map((lang) => (
-                <Pressable
-                  key={lang.value}
-                  onPress={() => {
-                    setPreferredLanguage(lang.value);
-                    setShowLanguageMenu(false);
-                  }}
-                  style={({ pressed }) => [
-                    {
-                      paddingHorizontal: 16,
-                      paddingVertical: 12,
-                      backgroundColor: preferredLanguage === lang.value ? '#ADBB32' : 'transparent',
-                      opacity: pressed ? 0.8 : 1,
-                    },
-                  ]}
-                >
-                  <Text
-                    className={`text-sm font-semibold ${
-                      preferredLanguage === lang.value ? 'text-background' : 'text-foreground'
-                    }`}
-                  >
-                    {lang.label}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-          )}
         </View>
+
+        {/* Subject Menu */}
+        {showSubjectMenu && (
+          <View className="bg-surface rounded-lg shadow-lg border border-border overflow-hidden">
+            {SUBJECT_MODES.map((subject) => (
+              <Pressable
+                key={subject.id}
+                onPress={() => {
+                  setCurrentSubject(subject.id);
+                  setShowSubjectMenu(false);
+                }}
+                style={({ pressed }) => [
+                  {
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    backgroundColor: currentSubject === subject.id ? subject.color : 'transparent',
+                    opacity: pressed ? 0.8 : 1,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#2a2a2a',
+                  },
+                ]}
+              >
+                <Text
+                  className={`text-sm font-semibold ${
+                    currentSubject === subject.id ? 'text-background' : 'text-foreground'
+                  }`}
+                >
+                  {subject.icon} {subject.name}
+                </Text>
+                <Text
+                  className={`text-xs mt-1 ${
+                    currentSubject === subject.id ? 'text-background opacity-80' : 'text-muted'
+                  }`}
+                >
+                  {subject.description}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
+
+        {/* Language Menu */}
+        {showLanguageMenu && (
+          <View className="bg-surface rounded-lg shadow-lg z-10 min-w-max border border-border">
+            {LANGUAGES.map((lang) => (
+              <Pressable
+                key={lang.value}
+                onPress={() => {
+                  setPreferredLanguage(lang.value);
+                  setShowLanguageMenu(false);
+                }}
+                style={({ pressed }) => [
+                  {
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    backgroundColor: preferredLanguage === lang.value ? '#ADBB32' : 'transparent',
+                    opacity: pressed ? 0.8 : 1,
+                  },
+                ]}
+              >
+                <Text
+                  className={`text-sm font-semibold ${
+                    preferredLanguage === lang.value ? 'text-background' : 'text-foreground'
+                  }`}
+                >
+                  {lang.label}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
       </View>
 
       {/* Messages */}
@@ -99,7 +177,11 @@ export default function AiTutorScreen() {
       >
         {messages.length === 0 ? (
           <View className="items-center justify-center py-8">
-            <Text className="text-center text-muted text-sm">
+            <Text className="text-4xl mb-3">{currentSubjectData?.icon}</Text>
+            <Text className="text-center text-muted text-sm font-semibold mb-2">
+              {currentSubjectData?.name} Mode
+            </Text>
+            <Text className="text-center text-muted text-xs">
               {preferredLanguage === 'hindi'
                 ? 'अभी तक कोई संदेश नहीं। अपना पहला सवाल पूछें!'
                 : preferredLanguage === 'hinglish'
@@ -135,6 +217,11 @@ export default function AiTutorScreen() {
                 {msg.language && (
                   <Text className={`text-xs ${msg.role === 'user' ? 'text-background opacity-70' : 'text-muted'}`}>
                     • {msg.language.toUpperCase()}
+                  </Text>
+                )}
+                {msg.subject && (
+                  <Text className={`text-xs ${msg.role === 'user' ? 'text-background opacity-70' : 'text-muted'}`}>
+                    • {msg.subject.toUpperCase()}
                   </Text>
                 )}
               </View>

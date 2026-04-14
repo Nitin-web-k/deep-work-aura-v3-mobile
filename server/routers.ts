@@ -27,6 +27,8 @@ export const appRouter = router({
           question: z.string().min(1),
           language: z.enum(["english", "hindi", "hinglish"]).default("english"),
           detectedLanguage: z.enum(["english", "hindi", "hinglish"]).optional(),
+          subject: z.enum(["general", "math", "science", "history", "english"]).default("general"),
+          subjectPrompt: z.string().optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -39,15 +41,11 @@ export const appRouter = router({
           const client = new GoogleGenerativeAI(apiKey);
           const model = client.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-          // Create language-specific prompt
-          let systemPrompt = "You are a helpful AI tutor. Answer questions clearly and concisely.";
-          if (input.language === "hindi") {
-            systemPrompt = "आप एक सहायक AI शिक्षक हैं। प्रश्नों का स्पष्ट और संक्षिप्त उत्तर दें। हिंदी में उत्तर दें।";
-          } else if (input.language === "hinglish") {
-            systemPrompt = "Aap ek sahayak AI shikshak hain. Prashno ka spasht aur sankshapt uttar den. Hinglish mein uttar den.";
-          }
+          // Use subject-specific prompt if provided, otherwise use default
+          let systemPrompt = input.subjectPrompt || "You are a helpful AI tutor. Answer questions clearly and concisely.";
 
           const prompt = `${systemPrompt}\n\nQuestion: ${input.question}`;
+          console.log(`[AI Tutor] Subject: ${input.subject}, Language: ${input.language}, Question: ${input.question.substring(0, 50)}...`);
 
           const result = await model.generateContent(prompt);
           const response = result.response;
